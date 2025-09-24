@@ -17,6 +17,14 @@ builder.Services.AddHttpClient<SelfHttpClient>(client =>
     client.BaseAddress = new Uri("https://localhost:5555");
 });
 
+// DATADOG SPECIFIC INTEGRATION
+builder.Services
+    .AddOptionsWithValidateOnStart<DatadogOptions>()
+    .BindConfiguration(DatadogOptions.SectionName)
+    .Validate(options => !string.IsNullOrWhiteSpace(options.ApiKey), """IF YOU SEE THIS ERROR YOU NEED TO RUN 'dotnet user-secrets --id agentless-otel-datadog set "Datadog:ApiKey" "<YOUR API KEY GOES HERE>"'"""); // 
+
+builder.AddOpenTelemetry();
+
 var app = builder.Build();
 
 app.MapGet("/", async ([FromServices] SelfHttpClient selfHttpClient) =>
