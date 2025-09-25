@@ -23,11 +23,7 @@ builder.Services
     .BindConfiguration(DatadogOptions.SectionName)
     .Validate(options => !string.IsNullOrWhiteSpace(options.ApiKey), """IF YOU SEE THIS ERROR YOU NEED TO RUN 'dotnet user-secrets --id agentless-otel-datadog set "Datadog:ApiKey" "<YOUR API KEY GOES HERE>"'"""); // 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Add Logging Enricher - used as a workaround to add Datadog magic value, see DataDogEnricher.cs
 builder.Logging.EnableEnrichment();
-builder.Services.AddStaticLogEnricher<DataDogEnricher>();
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 builder.AddOpenTelemetry();
 
