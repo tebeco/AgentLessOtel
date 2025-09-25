@@ -18,6 +18,11 @@ public static class OpenTelemetryExtensions
         //
         // luckily we can use "named options pattern" for each specifics "DatadogOptions" of each 3 exporters
 
+        // Resource detector is used to add custom attributes to all logs/metrics/traces
+        // https://opentelemetry.io/docs/specs/semconv/resource/#semantic-attributes-with-dedicated-environment-variable
+        // https://opentelemetry.io/docs/languages/dotnet/resources/
+        builder.Services.AddSingleton<DatadogResourceDetector>();
+
         builder
             .AddDatadogOpenTelemetryLogs()
             .AddDatadogOpenTelemetryMetrics()
@@ -48,7 +53,11 @@ public static class OpenTelemetryExtensions
             .WithLogging(
                 loggerProviderBuilder =>
                 {
-                    loggerProviderBuilder.AddOtlpExporter(NamedOptions, otlpExportOptions => { });
+                    loggerProviderBuilder.ConfigureResource(resource =>
+                    {
+                        resource.AddDetector(sp => sp.GetRequiredService<DatadogResourceDetector>());
+                    });
+                    loggerProviderBuilder.AddOtlpExporter(NamedOptions, configureExporter: null);
                 },
                 otelLoggerOptions =>
                 {
@@ -96,12 +105,17 @@ public static class OpenTelemetryExtensions
             .AddOpenTelemetry()
             .WithMetrics(metrics =>
             {
+                metrics.ConfigureResource(resource =>
+                {
+                    resource.AddDetector(sp => sp.GetRequiredService<DatadogResourceDetector>());
+                });
+
                 metrics
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
                     .AddRuntimeInstrumentation();
 
-                metrics.AddOtlpExporter(NamedOptions, (exporterOptions, metricReaderOptions) => { });
+                metrics.AddOtlpExporter(NamedOptions, configure: null);
             });
 
         return builder;
@@ -129,13 +143,18 @@ public static class OpenTelemetryExtensions
             .AddOpenTelemetry()
             .WithTracing(tracing =>
             {
+                tracing.ConfigureResource(resource =>
+                {
+                    resource.AddDetector(sp => sp.GetRequiredService<DatadogResourceDetector>());
+                });
+
                 tracing
                     .AddSource(builder.Environment.ApplicationName)
                     .AddSource(MyBackgroundService.MyBackgroundServiceActivityName)
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation();
 
-                tracing.AddOtlpExporter(NamedOptions, exporterOptions => { });
+                tracing.AddOtlpExporter(NamedOptions, configure: null);
             });
 
         return builder;
