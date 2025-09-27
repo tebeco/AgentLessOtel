@@ -1,18 +1,14 @@
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using MyWebApp;
 using MyWebApp.Db;
+using MyWebApp.Todos;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
-builder.Services.AddOpenApi();
+builder.AddMyApi();
 
-builder.AddOpenTelemetry();
+builder.Services.AddTransient<TodoService>();
+builder.Services.AddMyDbContext<MyDbContext>();
 
-builder.Services.AddAgileDbContext();
-
-builder.Services.AddHealthChecks().AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]);
 builder.Services.AddHostedService<MyBackgroundService>();
 builder.Services.AddHttpClient<SelfHttpClient>(client =>
 {
@@ -21,12 +17,6 @@ builder.Services.AddHttpClient<SelfHttpClient>(client =>
 
 var app = builder.Build();
 
-app.MapOpenApi();
-app.UseHttpsRedirection();
-app.UseAuthorization();
-
-app.MapHealthChecks("/live", new HealthCheckOptions { Predicate = r => r.Tags.Contains("live") });
-
-app.MapControllers();
+app.MapMyApi();
 
 app.Run();

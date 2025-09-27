@@ -1,4 +1,4 @@
-﻿namespace MyNuget.Apis;
+﻿namespace MyNuget.Telemetry;
 
 public class InfrastructureOptions
 {

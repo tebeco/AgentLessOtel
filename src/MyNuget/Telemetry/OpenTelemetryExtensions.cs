@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using MyNuget.Telemetry;
 using MyNuget.Telemetry.Datadog;
 using OpenTelemetry.Exporter;
 using OpenTelemetry.Logs;
@@ -27,7 +28,7 @@ public static class OpenTelemetryExtensions
         // Resource detector is used to add custom attributes to all logs/metrics/traces
         // https://opentelemetry.io/docs/specs/semconv/resource/#semantic-attributes-with-dedicated-environment-variable
         // https://opentelemetry.io/docs/languages/dotnet/resources/
-        builder.Services.AddSingleton<DatadogResourceDetector>();
+        builder.Services.AddSingleton<MyResourceDetector>();
 
         builder
             .AddDatadogOpenTelemetryLogs()
@@ -61,7 +62,7 @@ public static class OpenTelemetryExtensions
                 {
                     loggerProviderBuilder.ConfigureResource(resource =>
                     {
-                        resource.AddDetector(sp => sp.GetRequiredService<DatadogResourceDetector>());
+                        resource.AddDetector(sp => sp.GetRequiredService<MyResourceDetector>());
                     });
                     loggerProviderBuilder.AddOtlpExporter(NamedOptions, configureExporter: null);
                 },
@@ -113,7 +114,7 @@ public static class OpenTelemetryExtensions
             {
                 metrics.ConfigureResource(resource =>
                 {
-                    resource.AddDetector(sp => sp.GetRequiredService<DatadogResourceDetector>());
+                    resource.AddDetector(sp => sp.GetRequiredService<MyResourceDetector>());
                 });
 
                 metrics
@@ -151,7 +152,7 @@ public static class OpenTelemetryExtensions
             {
                 tracing.ConfigureResource(resource =>
                 {
-                    resource.AddDetector(sp => sp.GetRequiredService<DatadogResourceDetector>());
+                    resource.AddDetector(sp => sp.GetRequiredService<MyResourceDetector>());
                 });
 
                 tracing

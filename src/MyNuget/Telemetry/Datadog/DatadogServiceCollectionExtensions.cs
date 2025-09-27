@@ -7,7 +7,7 @@ namespace Microsoft.Extensions.Hosting;
 
 public static class DatadogServiceCollectionExtensions
 {
-    public static IHostApplicationBuilder AddDatadogOptions(this IHostApplicationBuilder builder)
+    public static IHostApplicationBuilder AddDatadog(this IHostApplicationBuilder builder)
     {
         builder.Services
             .AddOptionsWithValidateOnStart<DatadogOptions>()

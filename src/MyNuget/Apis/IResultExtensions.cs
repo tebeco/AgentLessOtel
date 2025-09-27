@@ -1,0 +1,51 @@
+﻿#pragma warning disable IDE0130 // Namespace does not match folder structure
+using Microsoft.AspNetCore.Http.HttpResults;
+
+namespace Microsoft.AspNetCore.Http;
+#pragma warning restore IDE0130 // Namespace does not match folder structure
+
+public static class TypeResultsExtensions
+{
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static Ok<IEnumerable<TOut>> Ok<TIn, TOut>(this IResultExtensions _, IEnumerable<TIn> values, Func<TIn, TOut> mapper)
+        where TIn : notnull
+        => TypedResults.Ok(values.Select(mapper));
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static Results<Ok<TIn>, NotFound> OkOrNotFound<TIn>(this IResultExtensions _, TIn? value)
+        where TIn : notnull
+        => value is null
+            ? TypedResults.NotFound()
+            : TypedResults.Ok(value);
+
+    public static Results<Ok<TOut>, NotFound> OkOrNotFound<TIn, TOut>(this IResultExtensions _, TIn? value, Func<TIn, TOut> mapper)
+        where TIn : notnull
+        => value is null
+            ? TypedResults.NotFound()
+            : TypedResults.Ok(mapper(value));
+
+    public static Results<Ok<IEnumerable<TOut>>, NotFound> OkOrNotFound<TIn, TOut>(this IResultExtensions _, IEnumerable<TIn>? values, Func<TIn, TOut> mapper)
+        where TIn : notnull
+        => values == null
+            ? TypedResults.NotFound()
+            : TypedResults.Ok(values.Select(mapper));
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static Results<NoContent, NotFound> NoContentOrNotFound<TIn>(this IResultExtensions _, TIn? value)
+        where TIn : notnull
+        => value is null
+            ? TypedResults.NotFound()
+            : TypedResults.NoContent();
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+}

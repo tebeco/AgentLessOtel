@@ -4,10 +4,11 @@ using System.Net.Mime;
 
 namespace MyWebApp;
 
+[Route("/")]
 [ApiController]
 public class RootController(SelfHttpClient selfHttpClient) : ControllerBase
 {
-    [HttpGet("/")]
+    [HttpGet]
     public async Task<ContentHttpResult> Get()
     {
         var livenessResult = await selfHttpClient.GetLivenesstAsync();

@@ -1,8 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
-using MyNuget.Apis;
 using OpenTelemetry.Resources;
 
-namespace MyNuget.Telemetry.Datadog;
+namespace MyNuget.Telemetry;
 
 // related docs:
 // https://docs.datadoghq.com/opentelemetry/config/environment_variable_support/
@@ -13,7 +12,7 @@ namespace MyNuget.Telemetry.Datadog;
     service.name maps to the DD_SERVICE environment variable
     service.version maps to the DD_VERSION environment variable
  */
-public class DatadogResourceDetector(IOptions<InfrastructureOptions> options) : IResourceDetector
+public class MyResourceDetector(IOptions<InfrastructureOptions> options) : IResourceDetector
 {
     public const string AttributeTeam = "team";
     public const string AttributeEnvironment = "deployment.environment.name";
