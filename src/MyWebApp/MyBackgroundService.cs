@@ -1,13 +1,13 @@
 using System.Diagnostics;
 
-namespace AgentLessOtelDataDog;
+namespace MyWebApp;
 
 public class MyBackgroundService(ILogger<MyBackgroundService> _logger, SelfHttpClient _selfHttpClient) : BackgroundService
 {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // used in startup because specific ActivitySource needs to be specifically "Added" into the .WithTracing
-    public const string MyBackgroundServiceActivityName = nameof(MyBackgroundService);
-    private static readonly ActivitySource _activitySource = new(MyBackgroundServiceActivityName);
+    public const string MyActivitySourceName = "MyWebApp.ActivitySource";
+    private static readonly ActivitySource _activitySource = new(MyActivitySourceName);
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -16,7 +16,7 @@ public class MyBackgroundService(ILogger<MyBackgroundService> _logger, SelfHttpC
         {
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // Set the "activity name" else it will take the "CallerMemberName" which will be "ExecuteAsync"
-            using var activity = _activitySource.StartActivity(MyBackgroundServiceActivityName);
+            using var activity = _activitySource.StartActivity(nameof(MyBackgroundService));
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -35,7 +35,16 @@ public class MyBackgroundService(ILogger<MyBackgroundService> _logger, SelfHttpC
             await _selfHttpClient.GetRootAsync();
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////
             
-            await Task.Delay(TimeSpan.FromSeconds(2));
+            // redis
+            // mongo
+            // efcore
+            // azure
+            //  storage account
+            //  sb
+            //  event hub
+            //  function
+            
+            await Task.Delay(TimeSpan.FromSeconds(2), default(CancellationToken));
         }
     }
 }

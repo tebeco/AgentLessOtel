@@ -1,16 +1,22 @@
-﻿using AgentLessOtelDataDog;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using MyNuget.Telemetry.Datadog;
 using OpenTelemetry.Exporter;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Microsoft.Extensions.Hosting;
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 
 public static class OpenTelemetryExtensions
 {
-    public static TBuilder AddOpenTelemetry<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
+    public static IHostApplicationBuilder AddOpenTelemetry(this IHostApplicationBuilder builder)
     {
+        builder.Logging.EnableEnrichment();
+
         // currently Datadog OTEL endpoing are:
         // * not the same URL for logs/metrics/traces
         // * not the same header for logs/metrics/traces
@@ -150,7 +156,7 @@ public static class OpenTelemetryExtensions
 
                 tracing
                     .AddSource(builder.Environment.ApplicationName)
-                    .AddSource(MyBackgroundService.MyBackgroundServiceActivityName)
+                    .AddSource("MyWebApp.ActivitySource") // TODO: find a way to add this from consumer side
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation();
 

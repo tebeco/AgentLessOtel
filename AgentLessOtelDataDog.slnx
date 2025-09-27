@@ -1,3 +1,10 @@
 <Solution>
-  <Project Path="AgentLessOtelDataDog/AgentLessOtelDataDog.csproj" />
+  <Folder Name="/Solution Items/">
+    <File Path=".gitignore" />
+    <File Path="AgentLessOtelDataDog.slnLaunch" />
+    <File Path="global.json" />
+  </Folder>
+  <Project Path="src/MyFunctionApp/MyFunctionApp.csproj" Id="2a01270c-cb1b-41e5-927a-a6f2fb7976d2" />
+  <Project Path="src/MyNuget/MyNuget.csproj" Id="4f69fe03-9f11-4382-b94c-aae5862a25e5" />
+  <Project Path="src/MyWebApp/MyWebApp.csproj" Id="8cfae4b1-6936-4c79-bc6b-052f7fdadbc3" />
 </Solution>

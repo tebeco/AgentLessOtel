@@ -1,4 +1,4 @@
-namespace AgentLessOtelDataDog;
+namespace MyWebApp;
 
 public class SelfHttpClient(HttpClient httpClient)
 {

@@ -1,0 +1,12 @@
+[
+  {
+    "Name": "MyWebApp",
+    "Projects": [
+      {
+        "Path": "src\\MyWebApp\\MyWebApp.csproj",
+        "Action": "Start",
+        "DebugTarget": "https"
+      }
+    ]
+  }
+]
