@@ -34,7 +34,7 @@ public class MyBackgroundService(ILogger<MyBackgroundService> _logger, SelfHttpC
             // make sure background traces properly work with background task
             await _selfHttpClient.GetRootAsync();
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            
+
             // redis
             // mongo
             // efcore
@@ -43,7 +43,8 @@ public class MyBackgroundService(ILogger<MyBackgroundService> _logger, SelfHttpC
             //  sb
             //  event hub
             //  function
-            
+
+            activity?.Dispose();
             await Task.Delay(TimeSpan.FromSeconds(2), default(CancellationToken));
         }
     }

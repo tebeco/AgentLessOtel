@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MyNuget.Telemetry.Datadog;
+using OpenTelemetry;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
@@ -10,7 +11,7 @@ namespace Microsoft.Extensions.Hosting;
 
 public static class DatadogServiceCollectionExtensions
 {
-    public static IHostApplicationBuilder AddDatadog(this IHostApplicationBuilder builder)
+    public static OpenTelemetryBuilder AddDatadog(this OpenTelemetryBuilder builder)
     {
         builder.Services
             .AddOptionsWithValidateOnStart<DatadogOptions>()
@@ -25,7 +26,7 @@ public static class DatadogServiceCollectionExtensions
         return builder;
     }
 
-    public static TBuilder AddDatadogOpenTelemetryLogs<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
+    public static OpenTelemetryBuilder AddDatadogOpenTelemetryLogs(this OpenTelemetryBuilder builder)
     {
         builder.Services.AddDatadogExporter(DatadogOtlpExporterConfiguration.LogsOptionName);
 
@@ -46,7 +47,7 @@ public static class DatadogServiceCollectionExtensions
         return builder;
     }
 
-    public static TBuilder AddDatadogOpenTelemetryMetrics<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
+    public static OpenTelemetryBuilder AddDatadogOpenTelemetryMetrics(this OpenTelemetryBuilder builder)
     {
         builder.Services.AddDatadogExporter(DatadogOtlpExporterConfiguration.MetricsOptionName);
 
@@ -74,7 +75,7 @@ public static class DatadogServiceCollectionExtensions
         return builder;
     }
 
-    public static TBuilder AddDatadogOpenTelemetryTraces<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
+    public static OpenTelemetryBuilder AddDatadogOpenTelemetryTraces(this OpenTelemetryBuilder builder)
     {
         builder.Services.AddDatadogExporter(DatadogOtlpExporterConfiguration.TracesOptionName);
 

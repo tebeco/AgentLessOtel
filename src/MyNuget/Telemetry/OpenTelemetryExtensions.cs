@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MyNuget.Telemetry;
+using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 
@@ -17,13 +18,13 @@ public static class OpenTelemetryExtensions
     public static readonly ActivitySource ActivitySource = new(OpenTelemetryExtensions.MyActivitySourceName);
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static IHostApplicationBuilder AddMyOpenTelemetry(this IHostApplicationBuilder builder)
+    public static OpenTelemetryBuilder AddMyOpenTelemetry(this IHostApplicationBuilder builder)
     {
         builder.Logging.EnableEnrichment();
 
         builder.Services.AddSingleton<MyResourceDetector>();
 
-        builder.Services
+        return builder.Services
             .AddOpenTelemetry()
             .ConfigureResource(resource =>
             {
@@ -45,8 +46,5 @@ public static class OpenTelemetryExtensions
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation();
             });
-
-
-        return builder;
     }
 }

@@ -1,0 +1,19 @@
+services:
+  my-postgres:
+    image: postgres:18
+    ports:
+      - "5432:5432"
+    environment:
+    - POSTGRES_DB=tododb
+    - POSTGRES_USER=postgres
+    - POSTGRES_PASSWORD=postgres
+  my-redis:
+    image: redis
+    ports:
+      - "6379:6379"
+  my-lgtm:
+    image: grafana/otel-lgtm
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+      - "3000:3000"
