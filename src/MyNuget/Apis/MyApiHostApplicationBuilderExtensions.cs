@@ -12,8 +12,8 @@ public static class MyApiHostApplicationBuilderExtensions
         builder.Services.AddControllers();
         builder.Services.AddOpenApi();
 
-        builder.AddDatadog();
-        //builder.AddOpenTelemetry();
+        //builder.AddDatadog();
+        builder.AddMyOpenTelemetry();
 
         builder.AddMyCache();
 

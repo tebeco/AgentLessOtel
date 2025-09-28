@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using OpenTelemetry.Exporter;
+﻿using OpenTelemetry.Exporter;
 
 namespace MyNuget.Telemetry.Datadog;
 
@@ -20,43 +18,33 @@ public class DatadogOptions
     ////////////////////////////////////////////////////////////////////////////////////////////////
     /// Logs
     /// https://docs.datadoghq.com/opentelemetry/setup/agentless/logs/?site=eu
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    public const string OtelLogsExporterOptionsName = "DatadogOtelLogsExporter";
-    public Uri LogsIngestionEndpoint { get; set; } = new("https://http-intake.logs.datadoghq.eu/v1/logs");
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+    public DatadogOtlpExporterConfiguration Logs { get; set; } = new DatadogOtlpExporterConfiguration
+    {
+        OptionsName = DatadogOtlpExporterConfiguration.LogsOptionName,
+        Endpoint = new("https://http-intake.logs.datadoghq.eu/v1/logs"),
+        HeaderFormat = "dd-api-key={0}",
+        Protocol = OtlpExportProtocol.HttpProtobuf
+    };
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     /// Metrics
     /// https://docs.datadoghq.com/opentelemetry/setup/agentless/metrics/?site=eu
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    public const string OtelMetricsExporterOptionsName = "DatadogOtelMetricsExporter";
-    public Uri MetricsIngestionEndpoint { get; set; } = new("https://api.datadoghq.eu/api/intake/otlp/v1/metrics");
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+    public DatadogOtlpExporterConfiguration Metrics { get; set; } = new DatadogOtlpExporterConfiguration
+    {
+        OptionsName = DatadogOtlpExporterConfiguration.MetricsOptionName,
+        Endpoint = new("https://api.datadoghq.eu/api/intake/otlp/v1/metrics"),
+        HeaderFormat = "dd-api-key={0},dd-otel-source=datadog",
+        Protocol = OtlpExportProtocol.HttpProtobuf
+    };
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     /// Traces
     /// https://docs.datadoghq.com/opentelemetry/setup/agentless/traces/?site=eu
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    public const string OtelTracesExporterOptionsName = "DatadogOtelTracesExporter";
-    public Uri TracesIngestionEndpoint { get; set; } = new("https://trace.agent.datadoghq.eu/v1/traces");
-}
-
-public static class DatadogOptionsExtensions
-{
-    public static OtlpExporterOptions Bind(this OtlpExporterOptions options, IOptions<DatadogOptions> datadogOptions)
+    public DatadogOtlpExporterConfiguration Traces { get; set; } = new DatadogOtlpExporterConfiguration
     {
-        options.Headers = $"dd-api-key={datadogOptions.Value.ApiKey},dd-otlp-source=datadog";
-        options.Protocol = OtlpExportProtocol.HttpProtobuf;
-        options.Endpoint = datadogOptions.Value.TracesIngestionEndpoint;
-
-        return options;
-    }
-
-    public static OptionsBuilder<OtlpExporterOptions> AddDatadogExporter(this IServiceCollection services, string optionsName)
-        => services.AddOptions<OtlpExporterOptions>(optionsName)
-            .Configure<IOptions<DatadogOptions>>((options, datadogOptions) =>
-            {
-                options.Bind(datadogOptions);
-            });
+        OptionsName = DatadogOtlpExporterConfiguration.TracesOptionName,
+        Endpoint = new("https://trace.agent.datadoghq.eu/v1/traces"),
+        HeaderFormat = "dd-api-key={0},dd-otel-source=datadog",
+        Protocol = OtlpExportProtocol.HttpProtobuf
+    };
 }

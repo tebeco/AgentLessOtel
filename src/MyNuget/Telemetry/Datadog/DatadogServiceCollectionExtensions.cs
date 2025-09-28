@@ -17,27 +17,6 @@ public static class DatadogServiceCollectionExtensions
             .BindConfiguration(DatadogOptions.SectionName)
             .Validate(options => !string.IsNullOrWhiteSpace(options.ApiKey), """IF YOU SEE THIS ERROR YOU NEED TO RUN 'dotnet user-secrets --id agentless-otel-datadog set "Datadog:ApiKey" "<YOUR API KEY GOES HERE>"'"""); // 
 
-        return builder;
-    }
-
-    public static TBuilder AddDatadogOpenTelemetryLogs<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
-    {
-        builder.Services.AddDatadogExporter(DatadogOptions.OtelLogsExporterOptionsName);
-
-        builder.Services
-            .AddOpenTelemetry()
-            .WithLogging(
-                loggerProviderBuilder =>
-                {
-                    loggerProviderBuilder.AddOtlpExporter(DatadogOptions.OtelLogsExporterOptionsName, configureExporter: null);
-                },
-                otelLoggerOptions =>
-                {
-                    otelLoggerOptions.IncludeFormattedMessage = true;
-                    otelLoggerOptions.IncludeScopes = true;
-                }
-            );
-
         builder
             .AddDatadogOpenTelemetryLogs()
             .AddDatadogOpenTelemetryMetrics()
@@ -46,12 +25,33 @@ public static class DatadogServiceCollectionExtensions
         return builder;
     }
 
-    public static TBuilder AddDatadogOpenTelemetryMetrics<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
+    public static TBuilder AddDatadogOpenTelemetryLogs<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {
-        builder.Services.AddDatadogExporter(DatadogOptions.OtelMetricsExporterOptionsName);
+        builder.Services.AddDatadogExporter(DatadogOtlpExporterConfiguration.LogsOptionName);
 
         builder.Services
-            .AddOptions<MetricReaderOptions>(DatadogOptions.OtelMetricsExporterOptionsName)
+            .AddOpenTelemetry()
+            .WithLogging(
+                loggerProviderBuilder =>
+                {
+                    loggerProviderBuilder.AddOtlpExporter(DatadogOtlpExporterConfiguration.LogsOptionName, configureExporter: null);
+                },
+                otelLoggerOptions =>
+                {
+                    otelLoggerOptions.IncludeFormattedMessage = true;
+                    otelLoggerOptions.IncludeScopes = true;
+                }
+            );
+
+        return builder;
+    }
+
+    public static TBuilder AddDatadogOpenTelemetryMetrics<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
+    {
+        builder.Services.AddDatadogExporter(DatadogOtlpExporterConfiguration.MetricsOptionName);
+
+        builder.Services
+            .AddOptions<MetricReaderOptions>(DatadogOtlpExporterConfiguration.MetricsOptionName)
             .Configure(options =>
             {
                 // this one is event harder to find documentation about
@@ -68,7 +68,7 @@ public static class DatadogServiceCollectionExtensions
             .AddOpenTelemetry()
             .WithMetrics(metrics =>
             {
-                metrics.AddOtlpExporter(DatadogOptions.OtelMetricsExporterOptionsName, configure: null);
+                metrics.AddOtlpExporter(DatadogOtlpExporterConfiguration.MetricsOptionName, configure: null);
             });
 
         return builder;
@@ -76,13 +76,13 @@ public static class DatadogServiceCollectionExtensions
 
     public static TBuilder AddDatadogOpenTelemetryTraces<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {
-        builder.Services.AddDatadogExporter(DatadogOptions.OtelTracesExporterOptionsName);
+        builder.Services.AddDatadogExporter(DatadogOtlpExporterConfiguration.TracesOptionName);
 
         builder.Services
             .AddOpenTelemetry()
             .WithTracing(tracing =>
             {
-                tracing.AddOtlpExporter(DatadogOptions.OtelTracesExporterOptionsName, configure: null);
+                tracing.AddOtlpExporter(DatadogOtlpExporterConfiguration.TracesOptionName, configure: null);
             });
 
         return builder;
