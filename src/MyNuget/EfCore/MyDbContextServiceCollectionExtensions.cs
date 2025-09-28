@@ -10,7 +10,7 @@ namespace Microsoft.Extensions.DependencyInjection;
 public static class MyDbContextServiceCollectionExtensions
 {
     public static IServiceCollection AddMyDbContext<TDbContext>(this IServiceCollection services)
-    where TDbContext : DbContext
+        where TDbContext : DbContext
     {
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // WORKS BUT RELY ON EXPLICIT CONNECTION STRING being "null!".

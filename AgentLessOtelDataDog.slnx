@@ -1,7 +1,9 @@
 <Solution>
   <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
     <File Path=".gitignore" />
     <File Path="AgentLessOtelDataDog.slnLaunch" />
+    <File Path="docker-compose.yml" />
     <File Path="global.json" />
   </Folder>
   <Project Path="src/MyFunctionApp/MyFunctionApp.csproj" Id="2a01270c-cb1b-41e5-927a-a6f2fb7976d2" />
