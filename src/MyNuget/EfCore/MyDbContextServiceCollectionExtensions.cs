@@ -41,25 +41,23 @@ public static class MyDbContextServiceCollectionExtensions
                 });
         });
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //services.AddDbContext<MyDbContext>((sp, options) =>
+        //services.AddDbContext<TDbContext>((sp, options) =>
         //{
-        //    options.UseNpgsql(
-        //        connectionString: null!,
-        //        optionsBuider =>
-        //        {
-        //            options.EnableSensitiveDataLogging();
-        //            options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+        //    options.UseNpgsql(optionsBuider =>
+        //    {
+        //        options.EnableSensitiveDataLogging();
+        //        options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 
-        //            optionsBuider.ConfigureDataSource(dataSourceBuilder =>
-        //            {
-        //                dataSourceBuilder.UseLoggerFactory(sp.GetRequiredService<ILoggerFactory>());
-        //                dataSourceBuilder.ConnectionStringBuilder.Host = "localhost";
-        //                dataSourceBuilder.ConnectionStringBuilder.Port = 5432;
-        //                dataSourceBuilder.ConnectionStringBuilder.Database = "tododb";
-        //                dataSourceBuilder.ConnectionStringBuilder.Username = "postgres";
-        //                dataSourceBuilder.ConnectionStringBuilder.Password = "postgres";
-        //            });
+        //        optionsBuider.ConfigureDataSource(dataSourceBuilder =>
+        //        {
+        //            dataSourceBuilder.UseLoggerFactory(sp.GetRequiredService<ILoggerFactory>());
+        //            dataSourceBuilder.ConnectionStringBuilder.Host = "localhost";
+        //            dataSourceBuilder.ConnectionStringBuilder.Port = 5432;
+        //            dataSourceBuilder.ConnectionStringBuilder.Database = "tododb";
+        //            dataSourceBuilder.ConnectionStringBuilder.Username = "postgres";
+        //            dataSourceBuilder.ConnectionStringBuilder.Password = "postgres";
         //        });
+        //    });
         //});
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
