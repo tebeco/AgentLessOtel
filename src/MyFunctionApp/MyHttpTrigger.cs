@@ -5,9 +5,9 @@ using Microsoft.Extensions.Logging;
 
 namespace MyFunctionApp;
 
-public class Function1(ILogger<Function1> logger)
+public class MyHttpTrigger(ILogger<MyHttpTrigger> logger)
 {
-    [Function("Function1")]
+    [Function("MyHttpTrigger")]
     public IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequest req)
     {
         logger.LogInformation("C# HTTP trigger function processed a request.");
