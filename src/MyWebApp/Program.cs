@@ -15,6 +15,8 @@ builder.Services.AddHttpClient<SelfHttpClient>(client =>
 
 var app = builder.Build();
 
+app.UseAzureAppConfiguration();
+
 app.MapMyApi();
 
 app.Run();

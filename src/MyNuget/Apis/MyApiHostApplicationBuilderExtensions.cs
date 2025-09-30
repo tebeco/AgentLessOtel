@@ -19,6 +19,8 @@ public static class MyApiHostApplicationBuilderExtensions
 
         builder.AddMyCache();
 
+       builder.AddMyAppConfiguration();
+
         builder.Services.AddHealthChecks().AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]);
 
         return builder;
