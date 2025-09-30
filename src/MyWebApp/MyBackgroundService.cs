@@ -22,7 +22,8 @@ public class MyBackgroundService(ILogger<MyBackgroundService> _logger, SelfHttpC
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // POSSIBLE BUG HERE
             // Attempt to add a "Baggage" to the trace, but datadog doesn't reflect that yet
-            activity?.AddBaggage("my-baggage", DateTimeOffset.Now.Second.ToString());
+            activity?.SetTag("baggage.key", "baggage-value");
+            activity?.SetTag("baggage.rnd", Random.Shared.Next(1, 10));
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////
             
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////
