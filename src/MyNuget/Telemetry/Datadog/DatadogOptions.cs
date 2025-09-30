@@ -33,7 +33,7 @@ public class DatadogOptions
     {
         OptionsName = DatadogOtlpExporterConfiguration.MetricsOptionName,
         Endpoint = new("https://api.datadoghq.eu/api/intake/otlp/v1/metrics"),
-        HeaderFormat = "dd-api-key={0},dd-otel-source=datadog",
+        HeaderFormat = "dd-api-key={0},dd-otlp-source=datadog",
         Protocol = OtlpExportProtocol.HttpProtobuf
     };
 
@@ -44,7 +44,7 @@ public class DatadogOptions
     {
         OptionsName = DatadogOtlpExporterConfiguration.TracesOptionName,
         Endpoint = new("https://trace.agent.datadoghq.eu/v1/traces"),
-        HeaderFormat = "dd-api-key={0},dd-otel-source=datadog",
+        HeaderFormat = "dd-api-key={0},dd-otlp-source=datadog",
         Protocol = OtlpExportProtocol.HttpProtobuf
     };
 }

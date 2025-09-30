@@ -12,7 +12,7 @@ public class MyResourceDetector(IOptions<InfrastructureOptions> options) : IReso
 
     public Resource Detect()
         => new ([
-            new (AttributeTeam, options.Value.Team ),
+            new (AttributeTeam, options.Value.Team),
             new (AttributeEnvironment, options.Value.Environment),
             new (AttributeServiceName, options.Value.Service),
             new (AttributeServiceVersion, options.Value.Version),
