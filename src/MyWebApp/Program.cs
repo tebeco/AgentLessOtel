@@ -7,7 +7,7 @@ builder.AddMyApi();
 builder.Services.AddTodos();
 builder.Services.AddMongoTodos();
 
-builder.Services.AddHostedService<MyBackgroundService>();
+//builder.Services.AddHostedService<MyBackgroundService>();
 builder.Services.AddHttpClient<SelfHttpClient>(client =>
 {
     client.BaseAddress = new Uri("https://localhost:5555");

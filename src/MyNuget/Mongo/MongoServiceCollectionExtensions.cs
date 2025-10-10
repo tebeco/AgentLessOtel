@@ -10,6 +10,8 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 public static class MongoServiceCollectionExtensions
 {
+    private const string ActivityNameSource = "MongoDB.Driver.Core.Extensions.DiagnosticSources";
+
     public static IServiceCollection AddMyMongoDb(this IServiceCollection services)
     {
         services
@@ -25,6 +27,11 @@ public static class MongoServiceCollectionExtensions
 
             return new MongoClient(settings);
         });
+
+
+        services
+            .AddOpenTelemetry()
+            .WithTracing(tracer => tracer.AddSource(ActivityNameSource));
 
         return services;
     }

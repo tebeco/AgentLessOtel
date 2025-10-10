@@ -6,7 +6,7 @@ namespace MyWebApp.Todos.v1.Endpoints;
 
 [ApiController]
 [Route("api/1.0/todos")]
-public class TodosController(TodoService todoService) : ControllerBase
+public class TodosController(TodoService todoService, LinkGenerator linkGenerator) : ControllerBase
 {
     [HttpGet]
     public async Task<Ok<IEnumerable<TodoDto>>> GetAll()
@@ -17,21 +17,22 @@ public class TodosController(TodoService todoService) : ControllerBase
     }
 
 
-    [HttpGet("{id}")]
-    public async Task<Results<Ok<TodoDto>, NotFound>> GetAsync([FromRoute] int id)
+    [HttpGet("{id}", Name = "GetTodoAsync")]
+    public async Task<Results<Ok<TodoDto>, NotFound>> GetTodoAsync([FromRoute] int id)
     {
         var todo = await todoService.GetAsync(id);
 
         return TypedResults.Extensions.OkOrNotFound(todo, todo => todo.ToDto());
     }
 
-
     [HttpPost]
-    public async Task<Ok<TodoDto>> CreateAsync([FromBody] CreateTodoDto dto)
+    public async Task<Created<TodoDto>> CreateAsync([FromBody] CreateTodoDto dto)
     {
         var todo = await todoService.CreateAsync(dto);
 
-        return TypedResults.Ok(todo.ToDto());
+        var todoLink = linkGenerator.GetUriByName(HttpContext, nameof(GetTodoAsync), new { id = todo.Id });
+
+        return TypedResults.Created(todoLink, todo.ToDto());
     }
 
     [HttpPut("{id}")]

@@ -40,6 +40,10 @@ public static class MyDbContextServiceCollectionExtensions
                     o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
                 });
         });
+
+        services.AddOpenTelemetry()
+            .WithTracing(builder => builder.AddNpgsql())
+            .WithMetrics(builder => builder.AddNpgsqlInstrumentation());
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //services.AddDbContext<TDbContext>((sp, options) =>
         //{

@@ -1,5 +1,6 @@
-﻿using Microsoft.Extensions.Caching.Hybrid;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using OpenTelemetry.Instrumentation.StackExchangeRedis;
+using OpenTelemetry.Trace;
 
 #pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Microsoft.Extensions.Hosting;
@@ -15,7 +16,23 @@ public static class DistributedCacheServiceCollectionExtensions
             builder.InstanceName = "MyWebApp:/";
         });
 
-        builder.Services.AddHybridCache();
+        builder.Services.AddHybridCache(options =>
+        {
+        });
+
+        builder
+        .Services
+        .AddOpenTelemetry()
+        .WithTracing(tracing =>
+        {
+            tracing.AddRedisInstrumentation(options =>
+            {
+                options.SetVerboseDatabaseStatements = true;
+            });
+            tracing.ConfigureRedisInstrumentation(_ => { });
+            tracing.AddInstrumentation(sp => sp.GetRequiredService<StackExchangeRedisInstrumentation>());
+        });
+
         return builder;
     }
 }

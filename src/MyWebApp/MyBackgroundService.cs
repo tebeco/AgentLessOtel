@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using MyWebApp.Todos.v1.Dtos;
 
 namespace MyWebApp;
 
@@ -34,6 +35,18 @@ public class MyBackgroundService(ILogger<MyBackgroundService> _logger, SelfHttpC
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // make sure background traces properly work with background task
             await _selfHttpClient.GetRootAsync();
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // make sure background traces properly work with background task
+            var createdTodoUri = await _selfHttpClient.CreateTodoAsync(
+                new CreateTodoDto("salfkjhasldfk", false)
+            );
+
+            var createdTodo = await _selfHttpClient.HttpClient.GetFromJsonAsync<TodoDto>(createdTodoUri.AbsolutePath);
+            _ = await _selfHttpClient.HttpClient.GetFromJsonAsync<TodoDto>(createdTodoUri.AbsolutePath);
+            _ = await _selfHttpClient.HttpClient.GetFromJsonAsync<TodoDto>(createdTodoUri.AbsolutePath);
+            _ = await _selfHttpClient.HttpClient.GetFromJsonAsync<TodoDto>(createdTodoUri.AbsolutePath);
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
             // redis
