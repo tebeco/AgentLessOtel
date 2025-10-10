@@ -14,7 +14,7 @@ public static class MyApiHostApplicationBuilderExtensions
 
         builder.AddMyOpenTelemetry()
             .AddDatadog()
-            .AddLgtm()
+            // .AddLgtm()
             ;
 
         builder.AddMyCache();

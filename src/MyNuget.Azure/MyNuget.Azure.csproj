@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="BlobStorage\" />
+    <Folder Include="EventHub\" />
+    <Folder Include="Queue\" />
+    <Folder Include="Table\" />
+
+    <PackageReference Include="Azure.Identity" Version="1.16.0" />
+    
+    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.20.1" />
+    <PackageReference Include="Microsoft.Azure.AppConfiguration.AspNetCore" Version="8.4.0" />
+  </ItemGroup>
+
+</Project>

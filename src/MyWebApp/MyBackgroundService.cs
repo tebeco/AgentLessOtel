@@ -26,7 +26,7 @@ public class MyBackgroundService(ILogger<MyBackgroundService> _logger, SelfHttpC
             activity?.SetTag("baggage.key", "baggage-value");
             activity?.SetTag("baggage.rnd", Random.Shared.Next(1, 10));
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            
+
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // make sure log/trace correlation properly work with background task
             _logger.LogInformation("MyBackgroundService is running at: {time}", DateTimeOffset.Now);
@@ -43,7 +43,7 @@ public class MyBackgroundService(ILogger<MyBackgroundService> _logger, SelfHttpC
                 new CreateTodoDto("salfkjhasldfk", false)
             );
 
-            var createdTodo = await _selfHttpClient.HttpClient.GetFromJsonAsync<TodoDto>(createdTodoUri.AbsolutePath);
+            var createdTodo = await _selfHttpClient.HttpClient.GetFromJsonAsync<TodoDto>(createdTodoUri!.AbsolutePath);
             _ = await _selfHttpClient.HttpClient.GetFromJsonAsync<TodoDto>(createdTodoUri.AbsolutePath);
             _ = await _selfHttpClient.HttpClient.GetFromJsonAsync<TodoDto>(createdTodoUri.AbsolutePath);
             _ = await _selfHttpClient.HttpClient.GetFromJsonAsync<TodoDto>(createdTodoUri.AbsolutePath);

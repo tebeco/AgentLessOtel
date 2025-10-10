@@ -13,12 +13,12 @@ services:
     ports:
       - "6379:6379"
 
-  my-lgtm:
-    image: grafana/otel-lgtm
-    ports:
-      - "4317:4317"
-      - "4318:4318"
-      - "3000:3000"
+#  my-lgtm:
+#    image: grafana/otel-lgtm
+#    ports:
+#      - "4317:4317"
+#      - "4318:4318"
+#      - "3000:3000"
 
   my-mongo:
     image: mongo

@@ -1,4 +1,6 @@
+using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MyNuget.EfCore;
 using Npgsql;
@@ -9,12 +11,18 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 public static class MyDbContextServiceCollectionExtensions
 {
-    public static IServiceCollection AddMyDbContext<TDbContext>(this IServiceCollection services)
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // used in startup because specific ActivitySource needs to be specifically "Added" into the .WithTracing
+    public const string MyActivitySourceName = "MyNuget.EfCore.ActivitySource";
+    public static readonly ActivitySource ActivitySource = new(MyActivitySourceName);
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static IHostApplicationBuilder AddMyDbContext<TDbContext>(this IHostApplicationBuilder builder)
         where TDbContext : DbContext
     {
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // WORKS BUT RELY ON EXPLICIT CONNECTION STRING being "null!".
-        services.AddNpgsqlDataSource(
+        builder.Services.AddNpgsqlDataSource(
                    connectionString: null!,
                    (sp, dataSourceBuilder) =>
                    {
@@ -26,7 +34,7 @@ public static class MyDbContextServiceCollectionExtensions
                        dataSourceBuilder.ConnectionStringBuilder.Password = "postgres";
                    });
 
-        services.AddDbContext<TDbContext>((sp, options) =>
+        builder.Services.AddDbContext<TDbContext>((sp, options) =>
         {
             options.EnableSensitiveDataLogging();
             options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
@@ -41,9 +49,13 @@ public static class MyDbContextServiceCollectionExtensions
                 });
         });
 
-        services.AddOpenTelemetry()
-            .WithTracing(builder => builder.AddNpgsql())
-            .WithMetrics(builder => builder.AddNpgsqlInstrumentation());
+        builder.Services.AddOpenTelemetry()
+            .WithTracing(tracing =>
+                tracing
+                    .AddSource(MyActivitySourceName)
+                    .AddNpgsql())
+            .WithMetrics(metrics => metrics.AddNpgsqlInstrumentation());
+
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //services.AddDbContext<TDbContext>((sp, options) =>
         //{
@@ -65,8 +77,8 @@ public static class MyDbContextServiceCollectionExtensions
         //});
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        services.AddHostedService<MyDbContextInitializerHostedService<TDbContext>>();
+        builder.Services.AddHostedService<MyDbContextInitializerHostedService<TDbContext>>();
 
-        return services;
+        return builder;
     }
 }

@@ -1,18 +1,19 @@
+using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace MyNuget.EfCore;
 
-public class MyDbContextInitializerHostedService<TDbContext>(IServiceProvider _serviceProvider)
+public class MyDbContextInitializerHostedService<TDbContext>(IServiceProvider serviceProvider)
     : IHostedService
     where TDbContext : DbContext
 {
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        using var activity = OpenTelemetryExtensions.ActivitySource.StartActivity("InitializeDatabase");
+        using var activity = MyDbContextServiceCollectionExtensions.ActivitySource.StartActivity("InitializeDatabase");
 
-        using var scope = _serviceProvider.CreateScope();
+        using var scope = serviceProvider.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<TDbContext>();
 
         await dbContext.Database.EnsureDeletedAsync(cancellationToken);

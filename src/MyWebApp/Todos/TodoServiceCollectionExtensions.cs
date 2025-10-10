@@ -7,11 +7,11 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 public static class TodoServiceCollectionExtensions
 {
-    public static IServiceCollection AddTodos(this IServiceCollection services)
+    public static IHostApplicationBuilder AddTodos(this IHostApplicationBuilder builder)
     {
-        services.AddMyDbContext<MyDbContext>();
-        services.AddTransient<TodoService>();
+        builder.AddMyDbContext<MyDbContext>();
+        builder.Services.AddTransient<TodoService>();
 
-        return services;
+        return builder;
     }
 }

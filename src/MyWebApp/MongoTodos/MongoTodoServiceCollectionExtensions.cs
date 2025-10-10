@@ -7,12 +7,12 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 public static class MongoTodoServiceCollectionExtensions
 {
-    public static IServiceCollection AddMongoTodos(this IServiceCollection services)
+    public static IHostApplicationBuilder AddMongoTodos(this IHostApplicationBuilder builder)
     {
-        services.AddMyMongoDb();
-        services.AddMongoCollection<Todo>("Todos");
-        services.AddTransient<MongoTodoService>();
+        builder.AddMyMongoDb();
+        builder.Services.AddMongoCollection<Todo>("Todos");
+        builder.Services.AddTransient<MongoTodoService>();
 
-        return services;
+        return builder;
     }
 }
