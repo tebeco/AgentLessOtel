@@ -13,8 +13,8 @@ public static class MyApiHostApplicationBuilderExtensions
         builder.Services.AddOpenApi();
 
         builder.AddMyOpenTelemetry()
-            .AddDatadog()
-            // .AddLgtm()
+            // .AddDatadog()
+            .AddLgtm()
             ;
 
         builder.AddMyCache();
