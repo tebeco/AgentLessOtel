@@ -20,12 +20,8 @@ public class MyBackgroundService(ILogger<MyBackgroundService> _logger, SelfHttpC
             using var activity = _activitySource.StartActivity(nameof(MyBackgroundService));
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            // POSSIBLE BUG HERE
-            // Attempt to add a "Baggage" to the trace, but datadog doesn't reflect that yet
-            activity?.SetTag("baggage.key", "baggage-value");
-            activity?.SetTag("baggage.rnd", Random.Shared.Next(1, 10));
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            activity?.SetTag("tag.key", "tag-value");
+            activity?.SetTag("tag.rnd", Random.Shared.Next(1, 10));
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // make sure log/trace correlation properly work with background task
@@ -48,15 +44,6 @@ public class MyBackgroundService(ILogger<MyBackgroundService> _logger, SelfHttpC
             _ = await _selfHttpClient.HttpClient.GetFromJsonAsync<TodoDto>(createdTodoUri.AbsolutePath);
             _ = await _selfHttpClient.HttpClient.GetFromJsonAsync<TodoDto>(createdTodoUri.AbsolutePath);
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-            // redis
-            // mongo
-            // efcore
-            // azure
-            //  storage account
-            //  sb
-            //  event hub
-            //  function
 
             activity?.Dispose();
             await Task.Delay(TimeSpan.FromSeconds(2), default(CancellationToken));
