@@ -1,6 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using OpenTelemetry.Instrumentation.StackExchangeRedis;
+﻿using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using OpenTelemetry.Trace;
+using StackExchange.Redis;
 
 #pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Microsoft.Extensions.Hosting;
@@ -10,28 +13,43 @@ public static class DistributedCacheServiceCollectionExtensions
 {
     public static IHostApplicationBuilder AddMyCache(this IHostApplicationBuilder builder)
     {
-        builder.Services.AddStackExchangeRedisCache(builder =>
+        builder
+            .Services
+            .AddSingleton<IConnectionMultiplexer>(sp =>
+            {
+                var redisCacheOptions = sp.GetRequiredService<IOptions<RedisCacheOptions>>().Value;
+
+                var multiplexer = ConnectionMultiplexer.Connect(redisCacheOptions.ConfigurationOptions!);
+                redisCacheOptions.ConnectionMultiplexerFactory = () => Task.FromResult<IConnectionMultiplexer>(multiplexer);
+
+                return multiplexer;
+            });
+
+        builder.Services.AddStackExchangeRedisCache(redisCacheOptions =>
         {
-            builder.Configuration = "localhost:6379";
-            builder.InstanceName = "MyWebApp:/";
+            redisCacheOptions.ConfigurationOptions = new();
+            redisCacheOptions.ConfigurationOptions.EndPoints.Add("localhost:6379");
+            redisCacheOptions.InstanceName = "MyWebApp:/";
         });
 
         builder.Services.AddHybridCache(options =>
         {
+            options.DefaultEntryOptions = new HybridCacheEntryOptions
+            {
+                Flags = HybridCacheEntryFlags.DisableLocalCache,
+            };
         });
 
         builder
-        .Services
-        .AddOpenTelemetry()
-        .WithTracing(tracing =>
-        {
-            tracing.AddRedisInstrumentation(options =>
+            .Services
+            .AddOpenTelemetry()
+            .WithTracing(tracing =>
             {
-                options.SetVerboseDatabaseStatements = true;
+                tracing.AddRedisInstrumentation(options =>
+                {
+                    options.SetVerboseDatabaseStatements = true;
+                });
             });
-            tracing.ConfigureRedisInstrumentation(_ => { });
-            tracing.AddInstrumentation(sp => sp.GetRequiredService<StackExchangeRedisInstrumentation>());
-        });
 
         return builder;
     }
