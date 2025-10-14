@@ -3,16 +3,11 @@ using MyWebApp.Todos.v1.Dtos;
 
 namespace MyWebApp;
 
-public class MyBackgroundService(ILogger<MyBackgroundService> _logger, SelfHttpClient _selfHttpClient) : BackgroundService
+public class MyBackgroundService(IHostEnvironment env, ILogger<MyBackgroundService> _logger, SelfHttpClient _selfHttpClient) : BackgroundService
 {
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // used in startup because specific ActivitySource needs to be specifically "Added" into the .WithTracing
-    public const string MyActivitySourceName = "MyWebApp.ActivitySource";
-    private static readonly ActivitySource _activitySource = new(MyActivitySourceName);
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        var _activitySource = new ActivitySource(env.ApplicationName);
         while (!stoppingToken.IsCancellationRequested)
         {
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////
