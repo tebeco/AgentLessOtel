@@ -13,7 +13,8 @@
     <Folder Include="Table\" />
 
     <PackageReference Include="Azure.Identity" Version="1.16.0" />
-    
+
+    <PackageReference Include="Azure.Messaging.EventHubs" Version="5.12.2" />    
     <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.20.1" />
     <PackageReference Include="Microsoft.Azure.AppConfiguration.AspNetCore" Version="8.4.0" />
   </ItemGroup>
